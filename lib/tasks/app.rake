@@ -2,7 +2,7 @@ namespace :app do
 
   task :ensure_development_environment => :environment do
     if Rails.env.production?
-      raise "\nDon't drop the production database.)"
+      raise "\nDon't drop the production database."
     end
   end
 
