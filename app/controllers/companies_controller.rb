@@ -14,7 +14,7 @@ class CompaniesController < ApplicationController
 
   def update
     @company = Company.find(params[:id])
-
+    
     respond_to do |format|
       if @product.update_attributes(params[:company])
         format.html { redirect_to(@company, :notice => 'company was successfully updated.') }

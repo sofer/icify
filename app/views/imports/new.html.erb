@@ -1,0 +1,11 @@
+<div>Select csv file to upload or paste csv text below</div>
+
+<% if @imported_file %>
+  <%= csv_display @imported_file %>
+<% else %>
+
+  <%= form_for @import, :html => {:multipart => true} do |f| %>
+    <%= f.file_field :csv_file %>
+    <%= submit_tag "Import" %>
+  <% end %>
+<% end %>

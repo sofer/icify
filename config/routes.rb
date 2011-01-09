@@ -1,10 +1,11 @@
 Icify::Application.routes.draw do
 
+  resources :imports
   resources :companies
   resources :orders
 
-  match 'import' => 'companies#edit', :id => 1
-  match 'export' => 'companies#show', :id => 1
+  match 'import' => 'imports#new', :company_id => 1
+  #match 'export' => 'exports#new', :company_id => 1
   match 'stock' => 'orders#new'
 
   root :to => 'companies#show', :id => 1
