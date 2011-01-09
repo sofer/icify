@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  option_kind_id: 1
+  variant_id: 1
+  value: MyString
+
+two:
+  option_kind_id: 1
+  variant_id: 1
+  value: MyString

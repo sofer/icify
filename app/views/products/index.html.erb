@@ -1,0 +1,28 @@
+<h1>Listing products</h1>
+
+IMPORT PRODUCTS
+
+<table>
+  <tr>
+    <th>Company</th>
+    <th>Brand</th>
+    <th>Collection</th>
+    <th>Handle</th>
+    <th>Title</th>
+    <th>Body</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @products.each do |product| %>
+  <tr>
+    <td><%= product.brand.name %></td>
+    <td><%= product.collection.name %></td>
+    <td><%= product.handle %></td>
+    <td><%= product.title %></td>
+    <td><%= product.body %></td>
+  </tr>
+<% end %>
+</table>
+

@@ -1,0 +1,38 @@
+<header>
+  ICIFY: managing stock and product data for iceboards.co.uk
+</header>
+
+<h2>
+  <%= @company.name.capitalize %>: Stock list and product feed
+</h2>
+
+<%= link_to "Import", import_path %>
+
+EXPORT
+
+<table>
+  <tr>
+    <th>Company</th>
+    <th>Brand</th>
+    <th>Collection</th>
+    <th>Handle</th>
+    <th>Title</th>
+    <th>Body</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @company.products.each do |product| %>
+  <tr>
+    <td><%= product.brand.name %></td>
+    <td><%= product.collection.name %></td>
+    <td><%= product.handle %></td>
+    <td><%= product.title %></td>
+    <td><%= product.body %></td>
+  </tr>
+<% end %>
+</table>
+  
+  
+

@@ -1,0 +1,25 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  product_id: 1
+  SKU: MyString
+  weight: 1
+  inventory: 1
+  Inventory_Policy: MyString
+  fulfillment: MyString
+  Price: 9.99
+  Compare_At_Price: 9.99
+  Shipping: false
+  Taxable: false
+
+two:
+  product_id: 1
+  SKU: MyString
+  weight: 1
+  inventory: 1
+  Inventory_Policy: MyString
+  fulfillment: MyString
+  Price: 9.99
+  Compare_At_Price: 9.99
+  Shipping: false
+  Taxable: false

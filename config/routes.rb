@@ -1,4 +1,14 @@
 Icify::Application.routes.draw do
+
+  resources :companies
+  resources :orders
+
+  match 'import' => 'companies#edit', :id => 1
+  match 'export' => 'companies#show', :id => 1
+  match 'stock' => 'orders#new'
+
+  root :to => 'companies#show', :id => 1
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
