@@ -4,7 +4,10 @@
   <% products, variants = parse_csv @imported_file %>
 
   <% products.each do |product| %>
+    
     <%= product["handle"] %><br>
+
+
   <% end %>
 
   <br>
