@@ -1,7 +1,15 @@
 <div>Select csv file to upload or paste csv text below</div>
 
 <% if @imported_file %>
-  <%= csv_display @imported_file %>
+  <% products = parse_csv @imported_file %>
+
+  <% products.each do |product| %>
+    <%= product %><br>
+    <%= product.each_key do |k| %>
+      KEY: <% k %> <br>
+    <% end %>
+  <% end %>
+  
 <% else %>
 
   <%= form_for @import, :html => {:multipart => true} do |f| %>
