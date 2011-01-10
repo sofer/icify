@@ -1,13 +1,16 @@
 <div>Select csv file to upload or paste csv text below</div>
 
 <% if @imported_file %>
-  <% products = parse_csv @imported_file %>
+  <% products, variants = parse_csv @imported_file %>
 
   <% products.each do |product| %>
-    <%= product %><br>
-    <%= product.each_key do |k| %>
-      KEY: <% k %> <br>
-    <% end %>
+    <%= product["handle"] %><br>
+  <% end %>
+
+  <br>
+
+  <% variants.each do |variant| %>
+    <%= variant["handle"] %><br>
   <% end %>
   
 <% else %>

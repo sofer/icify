@@ -41,12 +41,12 @@ module ImportsHelper
         handle.downcase.gsub!(' ', '-')
         tags = "#{brand}, #{collection}, #{tags}"
         products << {
-          :handle => handle,
-          :title => title,
-          :description => description,
-          :brand => brand,
-          :collection => collection,
-          :tags => tags,
+          "handle" => handle,
+          "title" => title,
+          "description" => description,
+          "brand" => brand,
+          "collection" => collection
+          #"tags" => tags,
         }
         if row[6] or row[6] == ''
           if not row[7] or row[7] == ''
@@ -54,10 +54,10 @@ module ImportsHelper
             var1_arr.each do |variant|
               variant.strip!
               variants << {
-                :product_handle => handle,
-                :handle => "#{handle}-#{variant}",
-                :sku => "#{handle}-#{variant}",
-                :price => price
+                "product_handle" => handle,
+                "handle" => "#{handle}-#{variant}",
+                "sku" => "#{handle}-#{variant}",
+                "price" => price
               }
             end
           else
@@ -67,7 +67,7 @@ module ImportsHelper
         end
       end
     end
-    return products
+    return products, variants
   end
 
 end
