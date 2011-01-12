@@ -2,15 +2,15 @@ class CreateVariants < ActiveRecord::Migration
   def self.up
     create_table :variants do |t|
       t.integer :product_id,  :null => false
-      t.string :SKU,  :null => false
+      t.string :sku,  :null => false
       t.integer :weight,  :null => false, :default => 0
       t.integer :inventory
-      t.string :Inventory_Policy,  :null => false, :default => 'deny'
+      t.string :inventory_policy,  :null => false, :default => 'deny'
       t.string :fulfillment,  :null => false, :default => 'manual'
-      t.decimal :Price, :precision => 10, :scale => 2
-      t.decimal :Compare_At_Price, :precision => 10, :scale => 2
+      t.decimal :price, :precision => 10, :scale => 2
+      t.decimal :compare_at_price, :precision => 10, :scale => 2
       t.boolean :Shipping,  :null => false, :default => 'true'
-      t.boolean :Taxable,  :null => false, :default => 'false'
+      t.boolean :taxable,  :null => false, :default => 'false'
 
       t.timestamps
     end

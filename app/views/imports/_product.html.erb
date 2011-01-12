@@ -1,0 +1,13 @@
+<tr class="<%= cycle "odd", "even" -%>">
+  <%= fields_for product do |fields| %>
+    <td>  
+        <%= fields.text_field :handle, :autocomplete => "off"  %>
+    </td>
+    <td>  
+      <%= fields.text_field :title, :autocomplete => "off"  %>
+    </td>
+    <td>
+      <%= fields.text_field :body, :autocomplete => "off"  %>
+    </td>
+  <% end %>
+</td>

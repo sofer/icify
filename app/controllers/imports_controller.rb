@@ -9,35 +9,20 @@ class ImportsController < ApplicationController
   end
 
   def create
-    if params[:import][:csv_file]
-      @import = Import.new
-      flash[:notice] = "imported data go here"
-      
-      @imported_file = params[:import][:csv_file]
-
-      respond_to do |format|
+    @import = Import.new(params[:import])
+    respond_to do |format|
+      if @import.save
+        format.html { redirect_to(@import.company, :notice => "#{@import.products.size} products were successfully imported.") }
+      else
+        flash[:alert] = "Did not save"
         format.html { render :action => "new" }
-        #format.html { render :text => params[:import][:csv_file].to_json }
-      end
-
-    else
-      
-      @import = Product.new(params[:product])
-
-      # process all the import lines
-
-      respond_to do |format|
-        if @import.save
-          format.html { redirect_to(@import, :notice => 'Product was successfully created.') }
-        else
-          format.html { render :action => "new" }
-        end
       end
     end
   end
 
   private 
   
+  # needed?
   def company
     @company ||= Company.find(params[:company_id])
   end

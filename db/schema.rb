@@ -103,15 +103,15 @@ ActiveRecord::Schema.define(:version => 20110109171924) do
 
   create_table "variants", :force => true do |t|
     t.integer  "product_id",                                                            :null => false
-    t.string   "SKU",                                                                   :null => false
+    t.string   "sku",                                                                   :null => false
     t.integer  "weight",                                          :default => 0,        :null => false
     t.integer  "inventory"
-    t.string   "Inventory_Policy",                                :default => "deny",   :null => false
+    t.string   "inventory_policy",                                :default => "deny",   :null => false
     t.string   "fulfillment",                                     :default => "manual", :null => false
-    t.decimal  "Price",            :precision => 10, :scale => 2
-    t.decimal  "Compare_At_Price", :precision => 10, :scale => 2
+    t.decimal  "price",            :precision => 10, :scale => 2
+    t.decimal  "compare_at_price", :precision => 10, :scale => 2
     t.boolean  "Shipping",                                        :default => true,     :null => false
-    t.boolean  "Taxable",                                         :default => false,    :null => false
+    t.boolean  "taxable",                                         :default => false,    :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

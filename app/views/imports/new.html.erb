@@ -1,25 +1,22 @@
+
+
+<% if @import.products %>
+  <%= form_for @import, :html => { :method => :put } do |form| %>
+    <%= render :partial => "product_table", :locals => { :products => @import.products } %>
+  <% end %>
+<% end %>
+
+<% if @import.variants %>
+  <%= form_for @import, :html => { :method => :put } do |form| %>
+    <%= render :partial => "variant_table", :locals => { :variants => @import.variants } %>
+  <% end %>
+<% end %>
+
+
+
 <div>Select csv file to upload or paste csv text below</div>
 
-<% if @imported_file %>
-  <% products, variants = parse_csv @imported_file %>
-
-  <% products.each do |product| %>
-    
-    <%= product["handle"] %><br>
-
-
-  <% end %>
-
-  <br>
-
-  <% variants.each do |variant| %>
-    <%= variant["handle"] %><br>
-  <% end %>
-  
-<% else %>
-
-  <%= form_for @import, :html => {:multipart => true} do |f| %>
-    <%= f.file_field :csv_file %>
-    <%= submit_tag "Import" %>
-  <% end %>
+<%= form_for @import, :html => {:multipart => true} do |f| %>
+  <%= f.file_field :csv_file %>
+  <%= submit_tag "Import" %>
 <% end %>
