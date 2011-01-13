@@ -1,13 +1,10 @@
 <tr class="<%= cycle "odd", "even" -%>">
   <%= fields_for variant do |fields| %>
-    <td>
-        <%= fields.text_field :product_id, :autocomplete => "off"  %>
+    <td>  
+      <%= fields.text_field :sku %>
     </td>
     <td>  
-      <%= fields.text_field :sku, :autocomplete => "off"  %>
-    </td>
-    <td>  
-      <%= fields.text_field :price, :autocomplete => "off"  %>
+      <%= fields.text_field :price %>
     </td>
   <% end %>
 </td>

@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(:version => 20110109171924) do
     t.string   "handle",                                          :null => false
     t.string   "title",                                           :null => false
     t.string   "body",          :default => "no description yet", :null => false
+    t.string   "tags"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

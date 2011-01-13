@@ -1,13 +1,17 @@
 Icify::Application.routes.draw do
 
-  resources :imports
   resources :companies
+  resources :companies do
+    resources :imports
+  end
   resources :orders
 
-  match 'import' => 'imports#new', :company_id => 1
+  #match 'import' => redirect ("/companies/1/imports/new")
+  #match 'import' => 'imports#new', :company_id => 1
   #match 'export' => 'exports#new', :company_id => 1
-  match 'stock' => 'orders#new'
+  #match 'stock' => 'orders#new'
 
+  #root :to => redirect("/companies/1")
   root :to => 'companies#show', :id => 1
 
   # The priority is based upon order of creation:

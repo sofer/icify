@@ -1,7 +1,7 @@
 class ImportsController < ApplicationController
 
   def new
-    @import = Import.new
+    @import = company.imports.new
     
     respond_to do |format|
       format.html
@@ -9,7 +9,7 @@ class ImportsController < ApplicationController
   end
 
   def create
-    @import = Import.new(params[:import])
+    @import = company.imports.new(params[:import])
     respond_to do |format|
       if @import.save
         format.html { redirect_to(@import.company, :notice => "#{@import.products.size} products were successfully imported.") }
@@ -22,7 +22,6 @@ class ImportsController < ApplicationController
 
   private 
   
-  # needed?
   def company
     @company ||= Company.find(params[:company_id])
   end

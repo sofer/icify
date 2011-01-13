@@ -1,22 +1,14 @@
+Company: <%= @company.name %>
 
+<%= form_for [@company, @import], :html => { :multipart => true } do |f| %>
 
-<% if @import.products %>
-  <%= form_for @import, :html => { :method => :put } do |form| %>
+  <% if @import.products.empty? %>
+    <div>Select csv file to upload or paste csv text below</div>
+    <%= f.file_field :csv_file %>
+  <% else %>
+    <%= f.hidden_field :items %>
     <%= render :partial => "product_table", :locals => { :products => @import.products } %>
-  <% end %>
-<% end %>
-
-<% if @import.variants %>
-  <%= form_for @import, :html => { :method => :put } do |form| %>
     <%= render :partial => "variant_table", :locals => { :variants => @import.variants } %>
   <% end %>
-<% end %>
-
-
-
-<div>Select csv file to upload or paste csv text below</div>
-
-<%= form_for @import, :html => {:multipart => true} do |f| %>
-  <%= f.file_field :csv_file %>
   <%= submit_tag "Import" %>
 <% end %>

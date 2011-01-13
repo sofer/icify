@@ -7,18 +7,30 @@ class Import < ActiveRecord::Base
   has_many :products
   has_many :variants, :through => :products
 
-  validates_presence_of :items
-  
+  before_save :preview_first
+
   accepts_nested_attributes_for :products, :variants
 
   def csv_file=(csv_file)
     parse_csv(csv_file)
+    @preview_first = true
   end
 
   private
   
+  def before_save
+    return false if preview_first
+  end
+
+  def preview_first
+    @preview_first ||= false
+  end
+  
   def erb_conversion(regex)
-    regex.gsub(/\{[^}]+\}/) {|var| '<%='+var.downcase.gsub(/\{|\}/,'')+'%>'}
+    regex.gsub!(/\{[^}]+\}/) {|var| '<%='+var.downcase.gsub(/\{|\}/,'')+'%>'}
+    regex.gsub!('<%=collection%>', '<%=collection.name%>' )
+    regex.gsub!('<%=brand%>', '<%=brand.name%>' )
+    return regex
   end
 
   def parse_csv(csv_file)
@@ -28,9 +40,11 @@ class Import < ActiveRecord::Base
       if row[0] == 'DEF'
         case row[1]
         when 'BRAND'
-          brand = row[2].strip
+          brand_name = row[2].strip
+          brand = self.company.brands.find_or_create_by_name(brand_name)
         when 'COLLECTION'
-          collection = row[2].strip
+          collection_name = row[2].strip
+          collection = self.company.collections.find_or_create_by_name(collection_name)
         when 'TITLE'
           title_regex = erb_conversion(row[2]).strip
         when 'HANDLE'
@@ -50,14 +64,14 @@ class Import < ActiveRecord::Base
         title = ERB.new(title_regex).result(binding).strip
         handle = ERB.new(handle_regex).result(binding).strip
         handle.downcase.gsub!(' ', '-')
-        tags = "#{brand}, #{collection}, #{tags}"
+        tags = "#{brand.name}, #{collection.name}, #{tags}"
         product =  Product.new({
           :handle => handle,
           :title => title,
-          :body => description
-          #"brand" => brand,
-          #"collection" => collection
-          #"tags" => tags,
+          :body => description,
+          :brand => brand,
+          :collection => collection,
+          :tags => tags
         })
         self.products << product
         if row[6] or row[6] == ''
@@ -90,6 +104,5 @@ class Import < ActiveRecord::Base
     end
     return products, variants
   end
-  
    
 end

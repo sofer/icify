@@ -7,6 +7,7 @@ class CreateProducts < ActiveRecord::Migration
       t.string :handle,  :null => false
       t.string :title,  :null => false
       t.string :body,  :null => false, :default => 'no description yet'
+      t.string :tags
 
       t.timestamps
     end
