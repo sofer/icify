@@ -155,7 +155,6 @@ class Company < ActiveRecord::Base
               variant = Variant.find_or_create_by_sku(
                 :product => product,
                 :sku => sku,
-                :product_handle => product.handle,
                 :price => price
               )
               begin

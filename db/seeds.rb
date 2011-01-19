@@ -8,11 +8,4 @@
 
 company = Company.find_or_create_by_name({:name => "noble"})
 
-[ "snowboards", "snowboard boots", "snowboard bindings" ].each do |name|
-  company.collections.find_or_create_by_name(name)
-end
-
-[ "Endeavor", "Ftwo" ].each do |name|
-  company.brands.find_or_create_by_name(name)
-end
 
