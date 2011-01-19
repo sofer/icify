@@ -3,6 +3,7 @@ Icify::Application.routes.draw do
   resources :companies do
     resources :brands
     resources :collections
+    resources :imports
   end
 
   resources :brands do

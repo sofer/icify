@@ -3,6 +3,8 @@
     <h1>Products</h1>
   </div>
   <div id="collections" data-role="content">
-    <%= render :partial => "product", :collection => @company.collections.first.products %>  
+    <ul data-role="listview" >
+        <%= render :partial => "product", :collection => @company.collections.first.products %>  
+      </ul>
   </div>
   <%= render :partial => "footer" %>

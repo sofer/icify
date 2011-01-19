@@ -12,7 +12,7 @@ namespace :app do
   desc "Populate the database with development data."
   task :populate => :environment do
     [
-      :brand_id => "1", :collection_id => "1", :handle => "test_snowboard", :title => "Test snowboard"
+      #:brand_id => "1", :collection_id => "1", :handle => "test_snowboard", :title => "Test snowboard"
     ].each do |attributes|
       Company.first.products.create(attributes)
     end
