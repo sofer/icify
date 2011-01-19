@@ -4,12 +4,8 @@ require 'erb'
 class Import < ActiveRecord::Base
   
   belongs_to :company
-  has_many :products
-  has_many :variants, :through => :products
 
   before_save :preview_first
-
-  accepts_nested_attributes_for :products, :variants
 
   def csv_file=(csv_file)
     parse_csv(csv_file)
@@ -18,10 +14,6 @@ class Import < ActiveRecord::Base
 
   private
   
-  def before_save
-    return false if preview_first
-  end
-
   def preview_first
     @preview_first ||= false
   end

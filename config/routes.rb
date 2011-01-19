@@ -1,9 +1,23 @@
 Icify::Application.routes.draw do
 
-  resources :companies
   resources :companies do
-    resources :imports
+    resources :brands
+    resources :collections
   end
+
+  resources :brands do
+    resources :products
+  end
+
+  resources :collections do
+    resources :products
+  end
+
+  resources :products do
+    resources :variants
+  end
+
+
   resources :orders
 
   #match 'import' => redirect ("/companies/1/imports/new")

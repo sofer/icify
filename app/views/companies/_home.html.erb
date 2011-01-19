@@ -1,0 +1,20 @@
+<div id="home" data-role="page">
+  <div data-role="header">
+    <h1>ICIFY: managing stock and product data for iceboards.co.uk</h1>
+  </div>
+  <div id="" data-role="content">
+    <h2>
+      <%= @company.name.capitalize %>: Stock list and product feed
+    </h2>
+    <ul data-role="listview">
+      <li>
+        <%= link_to 'Collections', company_collections_path(@company) %>
+      </li>
+      <li>
+        <%= link_to 'Brands', company_brands_path(@company) %>
+      </li>
+    </ul>
+    <%= link_to "Update", edit_company_path(@company) %>
+  </div>
+  <%= render :partial => "footer" %>
+</div>

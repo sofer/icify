@@ -1,0 +1,9 @@
+<div id="brands" data-role="page">
+  <div data-role="header">
+    <h1>Brands</h1>
+  </div>
+  <div id="collections" data-role="content">
+      <%= render :partial => "brand", :collection => @company.brands %>
+  </div>
+  <%= render :partial => "footer" %>
+</div>

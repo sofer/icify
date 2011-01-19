@@ -1,0 +1,18 @@
+<% if variant.id %>
+  <% record_kind = variant %>
+  <% first_column = 'New' %>
+<% else %>
+  <% record_kind = 'new_variant' %>
+  <% first_column = '' %>
+<% end %>
+<tr class="<%= cycle "odd", "even" -%>">
+  <%= fields_for record_kind do |fields| %>
+    <td><%= first_column %></td>
+    <td>  
+      <%= variant.product.handle if variant.product %>
+    </td>
+    <td>  
+      <%= fields.text_field :price, :value => variant.price %>
+    </td>
+  <% end %>
+</tr>

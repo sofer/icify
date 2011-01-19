@@ -1,1 +1,13 @@
-nothing yet
+Company: <%= @company.name %>
+
+<%= form_for @company, :html => { :multipart => true } do |f| %>
+  <% if @company.imported_products.empty? %>
+    <div>Select csv file to upload or paste csv text below</div>
+    Products: <%= f.file_field :product_file %>
+    Stock: <%= f.file_field :stock_file %>
+  <% else %>
+    <%= render :partial => "product_table", :locals => { :products => @company.imported_products } %>
+    <%= render :partial => "variant_table", :locals => { :variants => @company.imported_variants } %>
+  <% end %>
+  <%= submit_tag "Update products or stock" %>
+<% end %>
