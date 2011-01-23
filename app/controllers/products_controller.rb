@@ -86,8 +86,8 @@ class ProductsController < ApplicationController
   def group
     @group ||= case
              when params[:company_id] then Company.find(params[:company_id])
-             when params[:collection_id] then Company.find(params[:collection_id])
-             when params[:brand_id] then Company.find(params[:brand_id])
+             when params[:collection_id] then Collection.find(params[:collection_id])
+             when params[:brand_id] then Brand.find(params[:brand_id])
              end
   end
   
