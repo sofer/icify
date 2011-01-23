@@ -89,7 +89,9 @@ ActiveRecord::Schema.define(:version => 20110109171924) do
     t.integer  "collection_id",                                   :null => false
     t.string   "handle",                                          :null => false
     t.string   "title",                                           :null => false
+    t.string   "name",                                            :null => false
     t.string   "body",          :default => "no description yet", :null => false
+    t.string   "code"
     t.string   "tags"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -104,6 +106,7 @@ ActiveRecord::Schema.define(:version => 20110109171924) do
 
   create_table "variants", :force => true do |t|
     t.integer  "product_id",                                                            :null => false
+    t.string   "code"
     t.string   "sku",                                                                   :null => false
     t.integer  "weight",                                          :default => 0,        :null => false
     t.integer  "inventory"
@@ -111,6 +114,7 @@ ActiveRecord::Schema.define(:version => 20110109171924) do
     t.string   "fulfillment",                                     :default => "manual", :null => false
     t.decimal  "price",            :precision => 10, :scale => 2
     t.decimal  "compare_at_price", :precision => 10, :scale => 2
+    t.decimal  "trade_price",      :precision => 10, :scale => 2
     t.boolean  "Shipping",                                        :default => true,     :null => false
     t.boolean  "taxable",                                         :default => false,    :null => false
     t.datetime "created_at"

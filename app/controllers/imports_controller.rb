@@ -1,5 +1,14 @@
 class ImportsController < ApplicationController
 
+  def index
+    @imports = company.imports
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @products }
+    end
+  end
+  
   def new
     @import = company.imports.new
     
@@ -12,7 +21,7 @@ class ImportsController < ApplicationController
     @import = company.imports.new(params[:import])
     respond_to do |format|
       if @import.save
-        format.html { redirect_to(@import.company, :notice => "#{@import.products.size} products were successfully imported.") }
+        format.html { redirect_to(@import, :notice => "#{@import.products.size} products were successfully imported.") }
       else
         flash[:alert] = "Did not save"
         format.html { render :action => "new" }

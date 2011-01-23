@@ -2,6 +2,7 @@ class CreateVariants < ActiveRecord::Migration
   def self.up
     create_table :variants do |t|
       t.integer :product_id,  :null => false
+      t.string :code
       t.string :sku,  :null => false
       t.integer :weight,  :null => false, :default => 0
       t.integer :inventory
@@ -9,6 +10,7 @@ class CreateVariants < ActiveRecord::Migration
       t.string :fulfillment,  :null => false, :default => 'manual'
       t.decimal :price, :precision => 10, :scale => 2
       t.decimal :compare_at_price, :precision => 10, :scale => 2
+      t.decimal :trade_price, :precision => 10, :scale => 2
       t.boolean :Shipping,  :null => false, :default => 'true'
       t.boolean :taxable,  :null => false, :default => 'false'
 

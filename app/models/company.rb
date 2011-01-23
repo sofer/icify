@@ -12,14 +12,6 @@ class Company < ActiveRecord::Base
 
   #accepts_nested_attributes_for :products, :variants
 
-  # not in use
-  def var1=(var)
-  end
-  def var2=(var)
-  end
-  def var3=(var)
-  end
-
   def product_file=(product_file)
     parse_product_file(product_file)
     @preview_first = true
@@ -34,7 +26,7 @@ class Company < ActiveRecord::Base
     @imported_products ||= []
   end
 
-  def imported_variants
+  def imported_variants # not needed?
     @imported_variants ||= []
   end
 
@@ -45,149 +37,161 @@ class Company < ActiveRecord::Base
     @preview_first ||= false
   end
 
-  def erb_conversion(regex)
-    regex.gsub!(/\{[^}]+\}/) {|var| '<%='+var.downcase.gsub(/\{|\}/,'')+'%>'}
-    regex.gsub!('<%=collection%>', '<%=collection.name%>' )
-    regex.gsub!('<%=brand%>', '<%=brand.name%>' )
-    return regex
-  end
-
   def parse_stock_file(stock_file)
     # nothing yet
   end
 
-  def new_parse_product_file(product_file)
-      handle = handle_regex = title = title_regex = var1 = var2 = var3 = name = description = brand = collection = price = tags = ''
-    CSV.parse(product_file.read) do |row|
-      if row[0] == 'DEF'
-        case row[1]
-        when 'BRAND'
-          brand_name = row[2].strip
-          brand = self.brands.find_or_create_by_name(brand_name)
-        when 'COLLECTION'
-          collection_name = row[2].strip
-          collection = self.collections.find_or_create_by_name(collection_name)
-        when 'TITLE'
-          title_regex = erb_conversion(row[2]).strip
-        when 'HANDLE'
-          handle_regex = erb_conversion(row[2]).strip
-        when 'VAR1'
-          var1 = row[2].strip
-        when 'VAR2'
-          var2 = row[2].strip
-        when 'VAR3'
-          var3 = row[2].strip
-        end
-      elsif row[0] == 'ITEM'
-        name = row[2].strip
-        price = row[3].strip
-        description = row[4]
-        tags = row[5]
-        title = ERB.new(title_regex).result(binding).strip
-        handle = ERB.new(handle_regex).result(binding).strip
-        handle.downcase.gsub!(' ', '-')
-        tags = "#{brand.name}, #{collection.name}, #{tags}"
-
-        product =  self.products.find_or_initialize_by_handle(handle)
-        product.title = title
-        product.body = description
-        product.brand = brand
-        product.collection = collection
-        product.tags = tags
-        product.var1 = var1
-        product.var2 = var2
-        product.var3 = var3
-        product.price = price
-        imported_products << product
-      end
-    end
-  end
-
   def parse_product_file(product_file)
-      handle = handle_regex = title = title_regex = var1 = var2 = var3 = name = description = brand = collection = price = tags = ''
+
+    def erb_conversion(regex)  
+      return regex.gsub(/\{[^}]+\}/) {|var| '<%= params["' + var.downcase.gsub(/\{|\}/,'') + '"] %>'}
+    end
+
+    def tidy(cell)
+      cell ? cell.strip.gsub(/\s+/, ' ') : ''
+    end
+
+    def handlify(name)
+      tidy name.downcase.gsub(/\s|\/|\'/, '-')
+    end
+
+    defaults = {
+      #'brand_name' => 'undefined',
+      #'collection' => 'undefined',
+      'title_template' => '<%=name%>'
+    }
+    option_kinds = []
+    column_headings = []
+    products = []
+    variants = []
+
     CSV.parse(product_file.read) do |row|
-      if row[0] == 'DEF'
-        case row[1]
+      first_row = tidy(row[0]).upcase
+      case first_row
+      when 'DEF'
+        case row[1].upcase
         when 'BRAND'
-          brand_name = row[2].strip
-          brand = self.brands.find_or_create_by_name(brand_name)
+          defaults['brand'] = tidy(row[2])
         when 'COLLECTION'
-          collection_name = row[2].strip
-          collection = self.collections.find_or_create_by_name(collection_name)
+          defaults['collection']  = tidy(row[2])
         when 'TITLE'
-          title_regex = erb_conversion(row[2]).strip
-        when 'HANDLE'
-          handle_regex = erb_conversion(row[2]).strip
-        when 'VAR1'
-          var1 = row[2].strip
-        when 'VAR2'
-          var2 = row[2].strip
-        when 'VAR3'
-          var3 = row[2].strip
+          defaults['title_template'] = erb_conversion(tidy(row[2]))
+        when 'OPT'
+          option_kind = tidy(row[2]).downcase
+          option_kinds << option_kind
         end
-      elsif row[0] == 'ITEM'
-        name = row[2].strip
-        price = row[3].strip
-        description = row[4]
-        tags = row[5]
-        title = ERB.new(title_regex).result(binding).strip
-        handle = ERB.new(handle_regex).result(binding).strip
-        handle.downcase.gsub!(' ', '-')
-        tags = "#{brand.name}, #{collection.name}, #{tags}"
-        product =  Product.find_or_create_by_handle(
-          :company => self,
-          :handle => handle,
-          :title => title,
-          :body => description,
-          :brand => brand,
-          :collection => collection,
-          :tags => tags
-        )
-        # price if no variants?
-        imported_products << product
-        if row[6] or row[6] == ''
-          var1_arr = row[6].split(',')
-          if not row[7] or row[7] == ''
-            var1_arr.each do |var1|
-              var1.strip!
-              #logger.debug("var1: #{var1}")
-              sku = "#{handle}-#{var1}"
-              variant = Variant.find_or_create_by_sku(
-                :product => product,
-                :sku => sku,
-                :price => price
-              )
-              begin
-                variant.save!
-              rescue RecordInvalid => error
-                # do something
-              end
-              imported_variants << variant
-            end
+      when 'COLS'
+        1.upto(row.size) do |i|
+          column = tidy(row[i]).downcase
+          column_headings[i] = column
+        end
+      when 'ITEM'
+        inventory = nil
+        price = nil
+        compare_at_price = nil
+        trade_price = nil
+        code = nil
+        params = {
+          'name' => 'undefined',
+          'title_template' => defaults['title_template'],
+          'brand' => defaults['brand'],
+          'collection' => defaults['collection'],
+        }
+
+        column_headings.each_index do |i|
+          next unless column_headings[i] and row[i]
+          key = column_headings[i]
+          value = tidy(row[i])
+          case key
+          when 'qty', 'quantity', 'stock', 'inventory'
+            inventory = value
+          when 'code'
+            code = value
+          when 'trade price', 'trade'
+            trade_price = value
+          when 'compare at price'
+            compare_at_price = value
           else
-            var2_arr = row[7].split(',')
-            var1_arr.each do |var1|
-              var1.strip!
-              var2_arr.each do |var2|
-                var2.strip!
-                sku = "#{handle}-#{var1}-#{var2}"
-                variant = Variant.find_or_create_by_sku(
-                  :product => product,
-                  :sku => sku,
-                  :product_id => product.id,
-                  :price => price
-                )
-                begin
-                  variant.save!
-                rescue RecordInvalid => error
-                  # do something
-                end
-                imported_variants << variant
-              end
-            end
+            params[key] = value
           end
         end
-      end
+
+        params['title'] = ERB.new(defaults['title_template']).result(binding)
+        params['handle'] = handlify params['title']
+        
+        # IMPORTANT: Ignore columns with no ActiveRecord equivalent
+        params.each_key do |param|
+          unless Product.column_names.include?(param) ||
+            option_kinds.include?(param) ||
+            param == 'brand' || param == 'collection'
+            params.delete(param)
+          end
+        end
+
+        # add the tags
+        #params['tags'] = "#{params['brand']}, #{params['collection']}, #{params['tags']}"
+
+        # put all kinds of product option into an array of arrays
+        options = option_kinds.map do |opt|
+          params[opt].split(',') if params[opt] and not params[opt].empty?
+        end.compact
+
+        # remove options from params and create new option kind if required
+        option_kinds.each do |opt|
+          params.delete(opt)
+          OptionKind.find_or_create_by_name(opt)
+        end
+        
+        # turn brand and collection into activerecords
+        params['brand'] = self.brands.find_or_create_by_name(params['brand'])
+        params['collection']  = self.collections.find_or_create_by_name(params['collection'])
+        params['company'] = self
+        
+        product = Product.find_or_create_by_handle(params)
+        
+        combinations = []
+        case options.size
+        when  0
+          combinations = [[]] # creat a variant but with no variations
+        when 1
+          combinations = options
+        else
+          # output the cartesian project of each kind of option 
+          # (flattening the resulting array elements)
+          combinations = (options.inject() { |x,y| x.product y }).map { |a| a.flatten }
+        end
+
+        # create variants
+        combinations.each do |combo|
+
+          variant = {
+            'product' => product,
+            'sku' => product['handle'], 
+            'code' => product['code'],
+            'inventory' => inventory,
+            'price' => price,
+            'compare_at_price' => compare_at_price,
+            'trade_price' => trade_price
+          }
+          combo.each_index do |i|
+            variant['sku'] += "-#{handlify combo[i] }"
+          end
+          variant = Variant.find_or_create_by_sku(variant)
+          combo.each_index do |i|
+            option = {
+              'variant' => variant,
+              'option_kind' => OptionKind.find_by_name(option_kinds[i]),
+              'value' => combo[i]
+            }
+            # THIS NEEDS FIXING!
+            #Option.find_or_create_by_variant_and_option_kind(option)
+            Option.create(option) #not correct! 
+          end
+        end
+
+        imported_products << product
+
+      end 
     end
   end
 

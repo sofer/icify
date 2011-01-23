@@ -17,17 +17,6 @@ namespace :app do
       Company.first.products.create(attributes)
     end
     
-    [ "snowboards", "snowboard boots", "snowboard bindings" ].each do |name|
-      company.collections.find_or_create_by_name(name)
-    end
-
-    [ "Endeavor", "Ftwo" ].each do |name|
-      company.brands.find_or_create_by_name(name)
-    end
-    
   end
-
-  desc "Hard reset"
-  task :hreset => ["db:drop", "db:create", "db:migrate", "db:seed"]
 
 end

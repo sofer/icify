@@ -6,7 +6,9 @@ class CreateProducts < ActiveRecord::Migration
       t.integer :collection_id,  :null => false
       t.string :handle,  :null => false
       t.string :title,  :null => false
+      t.string :name,  :null => false
       t.string :body,  :null => false, :default => 'no description yet'
+      t.string :code
       t.string :tags
 
       t.timestamps
