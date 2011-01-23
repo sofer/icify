@@ -1,5 +1,9 @@
 <li>
-  <%= variant.sku %> 
+  <%= variant.code %> 
+  <% variant.options.each do |option| %>
+    <%= option.value %>
+  <% end %>
+
   <div class="ui-li-count">
     <%= variant.inventory %>
   </div>

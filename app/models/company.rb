@@ -183,9 +183,13 @@ class Company < ActiveRecord::Base
               'option_kind' => OptionKind.find_by_name(option_kinds[i]),
               'value' => combo[i]
             }
+
+############# !!!!!!!!!!!!!!!!!!!!
             # THIS NEEDS FIXING!
             #Option.find_or_create_by_variant_and_option_kind(option)
             Option.create(option) #not correct! 
+############# !!!!!!!!!!!!!!!!!!!!
+            
           end
         end
 
