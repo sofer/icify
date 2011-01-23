@@ -1,8 +1,4 @@
-<li>
-  <%= link_to product.title, product_variants_path(product) %>
-  <p class="ui-li-desc"></p>
-  <div class="ui-li-count">
-    <%= product.inventory %>
-  </div>
-  
+<li data-role="list-divider">
+  <%= product.title %>
 </li>
+<%= render :partial => "variant", :collection => product.variants %>
