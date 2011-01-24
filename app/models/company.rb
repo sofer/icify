@@ -52,7 +52,7 @@ class Company < ActiveRecord::Base
     end
 
     def handlify(name)
-      tidy name.downcase.gsub(/\s|\/|\'/, '-').gsub(/-+/, '-')
+      tidy name.downcase.gsub(' ', '-').gsub(/[^\w-]/, '').gsub(/-+/, '-').gsub(/^-|-$/, '')
     end
 
     defaults = {
