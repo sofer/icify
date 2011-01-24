@@ -47,6 +47,10 @@ class Company < ActiveRecord::Base
       return regex.gsub(/\{[^}]+\}/) {|var| '<%= params["' + var.downcase.gsub(/\{|\}/,'') + '"] %>'}
     end
 
+    def tidy(cell)
+      cell ? cell.strip.gsub(/\s+/, ' ') : ''
+    end
+
     def handlify(name)
       tidy name.downcase.gsub(/\s|\/|\'/, '-').gsub(/-+/, '-')
     end
