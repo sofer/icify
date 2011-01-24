@@ -164,7 +164,7 @@ class Company < ActiveRecord::Base
         # create variants
         combinations.each do |combo|
 
-          variant = {
+          variant_params = {
             'product' => product,
             'sku' => product['handle'], 
             'code' => product['code'],
@@ -174,21 +174,17 @@ class Company < ActiveRecord::Base
             'trade_price' => trade_price
           }
           combo.each_index do |i|
-            variant['sku'] += "-#{handlify combo[i] }"
+            variant_params['sku'] += "-#{handlify combo[i] }"
           end
-          variant = Variant.find_or_create_by_sku(variant)
+          variant = Variant.find_or_create_by_sku(variant_params)
           combo.each_index do |i|
-            option = {
+            option_params = {
               'variant' => variant,
               'option_kind' => OptionKind.find_by_name(option_kinds[i]),
               'value' => combo[i]
             }
 
-############# !!!!!!!!!!!!!!!!!!!!
-            # THIS NEEDS FIXING!
-            #Option.find_or_create_by_variant_and_option_kind(option)
-            Option.create(option) #not correct! 
-############# !!!!!!!!!!!!!!!!!!!!
+            Option.find_or_create_by_variant_id_and_option_kind_id(option_params)
             
           end
         end
