@@ -16,7 +16,20 @@ namespace :app do
     ].each do |attributes|
       Company.first.products.create(attributes)
     end
-    
+  end
+  
+  desc "remove extraneous characters from models"
+  task :tidy => :environment do
+    Product.all.each do |product|
+      product.handle.gsub!(/-+/, '-')
+      puts product.handle
+      product.save!
+    end
+    Variant.all.each do |variant|
+      variant.sku.gsub!(/-+/, '-')
+      puts variant.sku
+      variant.save!
+    end
   end
 
 end

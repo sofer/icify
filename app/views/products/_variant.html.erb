@@ -1,7 +1,11 @@
 <li>
-  <%= variant.code %> 
+  <%= variant.code %>
+  <% if variant.options.empty? %>
+  <%= variant.sku %>
+  <% else %>
   <% variant.options.each do |option| %>
     <%= option.value %>
+  <% end %>
   <% end %>
 
   <div class="ui-li-count">
