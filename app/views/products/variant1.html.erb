@@ -1,0 +1,13 @@
+<li class="stock">
+  <!--%= link_to variant_text(variant), "#stock-edit",
+    { "data-rel" => "dialog", "data-transition" => "pop" } %-->
+  <div data-role="collapsible" data-collapsed="false">
+    variant_text(variant)
+  </div>
+  <div>
+    collapsed
+  </div>  
+  <div class="ui-li-count">
+    <%= variant.inventory %>
+  </div>
+</li>

@@ -14,11 +14,6 @@ Icify::Application.routes.draw do
     resources :products
   end
 
-  resources :products do
-    resources :variants
-  end
-
-
   resources :orders
 
   #match 'import' => redirect ("/companies/1/imports/new")

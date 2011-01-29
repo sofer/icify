@@ -3,9 +3,11 @@
     <h1><%= @group.name %></h1>
   </div>
   <div data-role="content">
-    <ul data-role="listview" data-filter="true">
+    <ul data-role="listview" data-filter="true" data-inset="true">
       <%= render :partial => "product", :collection => @group.products %>
     </ul>
   </div>
   <%= render :partial => "application/footer" %>
 </div>
+
+<%= render :partial => "edit_variant" %>

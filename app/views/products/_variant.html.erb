@@ -1,14 +1,5 @@
-<li>
-  <%= variant.code %>
-  <% if variant.options.empty? %>
-  <%= variant.sku %>
-  <% else %>
-  <% variant.options.each do |option| %>
-    <%= option.value %>
-  <% end %>
-  <% end %>
-
-  <div class="ui-li-count">
-    <%= variant.inventory %>
-  </div>
+<li class="stock">
+  <%= link_to variant_text(variant), "#stock-edit",
+    { "data-rel" => "dialog", "data-transition" => "pop", "data-variant-id" => variant.id, "data-variant-inventory" => variant.inventory } %>
+  <div class="ui-li-count inventory"><%=variant.inventory%></div>
 </li>
