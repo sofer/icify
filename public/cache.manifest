@@ -1,0 +1,22 @@
+CACHE MANIFEST
+# Cache manifest version 0.0.1
+# All files to be cached go below
+# Remember that updates here will only be picked up so comment out files under active development
+# See http://diveintohtml5.org/offline.html
+
+# changes to files will need to be reloaded twice. Some files will need to be removed from this list and reloaded
+# changes to the main page will not show up at all, unless the manifest is renamed or removed entirely--which it probably should be during UI testing!
+
+CACHE:
+images/icon.png
+images/startup.png
+//javascripts/application.js 
+
+stylesheets/application.css
+
+FALLBACK:
+/
+
+NETWORK:
+*
+
