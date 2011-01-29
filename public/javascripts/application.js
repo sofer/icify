@@ -113,9 +113,7 @@ ICE.session = {
       'data-variant-inventory': variant.inventory        
     }).text(variant.sku.unhyphenate());
     item.append(link);
-    var count = $('<div>').attr({
-      class: 'ui-li-count inventory'
-    }).text(variant.inventory);
+    var count = $('<div>').addClass('ui-li-count inventory').text(variant.inventory);
     item.append(count);
     return item;
   },
