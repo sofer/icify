@@ -169,9 +169,6 @@ $(document).ready(function() {
   });
   
   
-  
-
-  // NOT WORKING
   $('#add-stock').live('taphold', function(){
     ICE.session.incrementStock(10);
   });
@@ -179,7 +176,7 @@ $(document).ready(function() {
     ICE.session.incrementStock(-10);
   });
   $('#remove-stock').live('touchend', function(){
-    alert('touchend')
+    //alert('touchend')
   });
   
   
