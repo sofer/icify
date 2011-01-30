@@ -1,10 +1,10 @@
 
 // see http://stackoverflow.com/questions/2010892/storing-objects-in-html5-localstorage
 Storage.prototype.setObject = function(key, value) {
-    this.setItem(key, JSON.stringify(value));
+  this.setItem(key, JSON.stringify(value));
 }
 Storage.prototype.getObject = function(key) {
-    return JSON.parse(this.getItem(key));
+  return this.getItem(key) && JSON.parse(this.getItem(key));
 }
 
 String.prototype.unhyphenate = function () {
@@ -15,28 +15,24 @@ var ICE = {}
 
 ICE.session = {
     
-  company: [],
+  company: {},
   editStockId: null,
   
-  getStock: function() {
-    this.subjects = localStorage.getObject('company') || [];
-    if (this.company.length > 0) {
-      this.loadFront();
-    } else {
-      this.getRemoteStock();
-    }
-    
-  },
-  
   // json request
-  getRemoteStock: function() {
+  getStock: function() {
     var that = this;
     var jsonUrl = 'http://' + document.location.host + '/companies/1.json'; //generalize later
     $.ajax({
       url: jsonUrl,
       dataType: 'json',
       error: function () {
-        alert("Failed to retrieve stock list. Please try again later.");
+        that.company = localStorage.getObject('company') || {};
+        if (that.company.name) {
+          that.loadFront();
+          alert("Failed to retrieve stock list. Loading from local cache.");
+        } else {
+          alert("Failed to retrieve stock list. Try again later.");
+        }
       },
       success: function(json){
         that.company = json.company;
