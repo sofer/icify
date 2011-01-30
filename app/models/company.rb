@@ -86,7 +86,7 @@ class Company < ActiveRecord::Base
           column_headings[i] = column
         end
       when 'ITEM'
-        inventory = nil
+        inventory = 0
         price = nil
         compare_at_price = nil
         trade_price = nil

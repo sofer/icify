@@ -88,7 +88,7 @@ ICE.session = {
     for (var i=0;i<brand.products.length;i++) {
       var product = brand.products[i];
       var item = $('<li data-role="list-divider">');
-      item.text(product.name);
+      item.text(product.title);
       list.append(item);
       for (var j=0;j<product.variants.length;j++) {
         var variant = this.addVariant(product.variants[j]);
@@ -109,7 +109,7 @@ ICE.session = {
       'data-variant-inventory': variant.inventory        
     }).text(variant.sku.unhyphenate());
     item.append(link);
-    var count = $('<div>').addClass('ui-li-count inventory').text(variant.inventory);
+    var count = $('<div>').addClass('ui-li-count inventory').text(variant.inventory||'0');
     item.append(count);
     return item;
   },
