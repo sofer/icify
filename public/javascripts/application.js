@@ -166,10 +166,10 @@ $(document).ready(function() {
   
   
   $('#add-stock').live('taphold', function(){
-    ICE.session.incrementStock(10);
+    ICE.session.incrementStock(9);
   });
   $('#remove-stock').live('taphold', function(){
-    ICE.session.incrementStock(-10);
+    ICE.session.incrementStock(-9);
   });
   $('#remove-stock').live('touchend', function(){
     //alert('touchend')
