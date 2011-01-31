@@ -1,12 +1,14 @@
 <div id="stock-edit" data-role="dialog">
-  <div data-role="content">
+  <div data-role="header">
     <h1 id="stock-title"></h1>
+  </div>
+  <div data-role="content">
     <form>
-      <div data-role="controlgroup" data-type="horizontal">
-        <input type="text" name="inventory" id="new-stock-level" value=""  />      
+        <input type="number" name="inventory" id="new-stock-level" />      
+        <div data-role="controlgroup" data-type="horizontal">
         <div id="remove-stock" data-role="button" data-icon="minus" data-theme="b">&nbsp;</div>
         <div id="add-stock" data-role="button" data-icon="plus" data-theme="b">&nbsp;</div>    
-        <a href="#" id="update-stock" data-role="button" data-icon="check" data-theme="b">Update stock level</a>    
+        <a href="#" id="update-stock" data-role="button" data-icon="check" data-theme="b">Update stock</a>    
     </div>
     </form>
   </div>
