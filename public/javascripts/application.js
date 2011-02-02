@@ -17,6 +17,7 @@ ICE.session = {
     
   company: {},
   editStockId: null,
+  currentBrandIndex: '0',
   
   // json request
   getStock: function() {
@@ -78,10 +79,13 @@ ICE.session = {
     $('#collections div[data-role="content"]').append(list);
     $('#collections ul[data-role="listview"]').listview(); //regenerate the listview
   },
+  
+  selectBrand: function(link) {
+    this.currentBrandIndex = link.attr('data-brand-index');
+  },
 
   loadProducts: function(link) {
-    var brand_index = link.attr('data-brand-index');
-    var brand = this.company.brands[brand_index];
+    var brand = this.company.brands[this.currentBrandIndex];
     $('#products h1').text(brand.name);
     $('#products div[data-role="content"]').html('');
     var list = $('<ul data-role="listview" data-filter="true" data-inset="true"/>');
@@ -99,7 +103,7 @@ ICE.session = {
     $('#products ul[data-role="listview"]').listview(); //regenerate the listview
   },
   
-  addVariant: function(variant) {
+  addVariant: function(variant, index) {
     var item = $('<li>');
     var link = $('<a>').attr({
       href: '#stock-edit',
@@ -113,7 +117,7 @@ ICE.session = {
     item.append(count);
     return item;
   },
-    
+  
   editStock: function(item) {
     var title = item.text();
     var inventory = item.parent().children('.inventory').text();
@@ -138,20 +142,32 @@ ICE.session = {
   }
   
 }
-
-
-$(document).ready(function() {
+$(document).bind("mobileinit", function(){
 
   ICE.session.getStock();
-  
+  window.location = '#home';
+    
   $('#home a').live('click tap', function(){
-    ICE.session.loadProducts($(this));
+    $.mobile.pageLoading();
+    ICE.session.selectBrand($(this));
+  });
+
+  $('#products').live('pageshow', function(event, ui){
+    $.mobile.pageLoading();
+    ICE.session.loadProducts();
+    $.mobile.pageLoading(true);
   });
 
   $('#products a').live('click tap', function(){
-    ICE.session.editStock($(this));
+    $.mobile.pageLoading();
   });
   
+  $('#add-stock').live('pageshow', function(event, ui){
+    $.mobile.pageLoading();
+    ICE.session.editStock();
+    $.mobile.pageLoading(true);
+  });
+
   $('#add-stock').live('click tap', function(){
     ICE.session.incrementStock(1);
   });
@@ -174,8 +190,5 @@ $(document).ready(function() {
   $('#remove-stock').live('touchend', function(){
     //alert('touchend')
   });
-  
-  
-
 
 })
