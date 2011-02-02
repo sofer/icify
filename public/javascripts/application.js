@@ -159,13 +159,14 @@ $(document).bind("mobileinit", function(){
   });
 
   $('#products a').live('click tap', function(){
-    $.mobile.pageLoading();
+    //$.mobile.pageLoading();
+    ICE.session.editStock($(this));
   });
   
   $('#add-stock').live('pageshow', function(event, ui){
-    $.mobile.pageLoading();
-    ICE.session.editStock();
-    $.mobile.pageLoading(true);
+    //$.mobile.pageLoading();
+    //ICE.session.editStock();
+    //$.mobile.pageLoading(true);
   });
 
   $('#add-stock').live('click tap', function(){
