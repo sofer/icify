@@ -86,46 +86,57 @@ ICE.session = {
 
   loadProducts: function(link) {
     var brand = this.company.brands[this.currentBrandIndex];
-    $('#products h1').text(brand.name);
-    $('#products div[data-role="content"]').html('');
-    var list = $('<ul data-role="listview" data-filter="true" data-inset="true"/>');
-    for (var i=0;i<brand.products.length;i++) {
-      var product = brand.products[i];
-      var item = $('<li data-role="list-divider">');
-      item.text(product.title);
-      list.append(item);
-      for (var j=0;j<product.variants.length;j++) {
-        var variant = this.addVariant(product.variants[j]);
-        list.append(variant);
+    var previousBrandName = $('#products h1').text();
+    if (brand.name != previousBrandName) {
+      $('#products h1').text(brand.name);
+      $('#product-list').html('');
+      var list = $('<ul data-role="listview" data-filter="true" data-inset="true"/>');
+      for (var i=0;i<brand.products.length;i++) {
+        var product = brand.products[i];
+        var item = $('<li data-role="list-divider">');
+        item.text(product.title);
+        list.append(item);
+        for (var j=0;j<product.variants.length;j++) {
+
+          var variant = this.addVariant(product.variants[j], i, j);
+          list.append(variant);
+        }
       }
+      $('#product-list').append(list);
+      $('#products ul[data-role="listview"]').listview(); //regenerate the listview
     }
-    $('#products div[data-role="content"]').append(list);
-    $('#products ul[data-role="listview"]').listview(); //regenerate the listview
   },
   
-  addVariant: function(variant, index) {
+  addVariant: function(variant, product_index, variant_index) {
     var item = $('<li>');
     var link = $('<a>').attr({
+    //var item = $('<li>').attr({
       href: '#stock-edit',
       'data-rel': 'dialog', 
       'data-transition': 'pop',
-      'data-variant-id': variant.id,
-      'data-variant-inventory': variant.inventory        
+      'data-variant-id': variant.id, 
+      'data-variant-index': variant_index, 
+      'data-product-index': product_index
     }).text(variant.sku.unhyphenate());
     item.append(link);
-    var count = $('<div>').addClass('ui-li-count inventory').text(variant.inventory||'0');
+    var count = $('<div>').addClass(
+      'ui-li-count inventory'
+    ).attr({
+      'data-variant-id': variant.id
+    }).text(variant.inventory||'0');
     item.append(count);
     return item;
   },
-  
-  editStock: function(item) {
-    var title = item.text();
-    var inventory = item.parent().children('.inventory').text();
+
+  editStock: function() {
+    var li = $('#products li a[data-variant-id="'+this.editStockId+'"]')
+    var title = li.text();
+    var inventory = li.parent().children('.inventory').text();
     $('#stock-title').text(title);
     $('#stock-current').val(inventory);
     $('#stock-difference').val('0');
     $('#new-stock-level').val(inventory);
-    self.editStockId = item.attr('data-variant-id');
+    self.editStockId = li.attr('data-variant-id');
     $('edit-stock-id').val(inventory);
   },
   
@@ -137,11 +148,12 @@ ICE.session = {
 
   updateStock: function() {
     var inventory = $('#new-stock-level').val();
-    var selector = 'a[data-variant-id="'+self.editStockId+'"]';
-    $(selector).parent().children('.inventory').text(inventory);
+    var selector = '.inventory[data-variant-id="'+this.editStockId+'"]';
+    $(selector).text(inventory);
   }
   
 }
+
 $(document).bind("mobileinit", function(){
 
   ICE.session.getStock();
@@ -158,15 +170,14 @@ $(document).bind("mobileinit", function(){
     $.mobile.pageLoading(true);
   });
 
-  $('#products a').live('click tap', function(){
-    //$.mobile.pageLoading();
-    ICE.session.editStock($(this));
+  $('#product-list a').live('click tap', function(){
+    ICE.session.editStockId = $(this).attr('data-variant-id');
+    ICE.session.editStock();
   });
   
-  $('#add-stock').live('pageshow', function(event, ui){
-    //$.mobile.pageLoading();
+  // pageshow not working for dialogs
+  $('#stock-edit').live('pageshow', function(event, ui){
     //ICE.session.editStock();
-    //$.mobile.pageLoading(true);
   });
 
   $('#add-stock').live('click tap', function(){
@@ -177,19 +188,16 @@ $(document).bind("mobileinit", function(){
     ICE.session.incrementStock(-1);
   });
 
+  // pagehide does work for dialogs
   $('#stock-edit').live('pagehide', function(){
     ICE.session.updateStock();
   });
-  
-  
+
   $('#add-stock').live('taphold', function(){
     ICE.session.incrementStock(9);
   });
   $('#remove-stock').live('taphold', function(){
     ICE.session.incrementStock(-9);
-  });
-  $('#remove-stock').live('touchend', function(){
-    //alert('touchend')
   });
 
 })
