@@ -110,10 +110,10 @@ ICE.session = {
   addVariant: function(variant, product_index, variant_index) {
     var item = $('<li>');
     var link = $('<a>').attr({
-    //var item = $('<li>').attr({
-      href: '#stock-edit',
-      'data-rel': 'dialog', 
-      'data-transition': 'pop',
+    //item.attr({
+      //href: '#stock-edit',
+      //'data-rel': 'dialog', 
+      //'data-transition': 'pop',
       'data-variant-id': variant.id, 
       'data-variant-index': variant_index, 
       'data-product-index': product_index
@@ -146,6 +146,14 @@ ICE.session = {
     $('#new-stock-level').val(inventory);
   },
 
+  incrementStock2: function(inc) {
+    var selector = '.inventory[data-variant-id="'+this.editStockId+'"]';
+    var inventory = parseInt($(selector).text())+inc;
+    if (inventory >= 0) { 
+      $(selector).text(inventory); 
+    }
+  },
+
   updateStock: function() {
     var inventory = $('#new-stock-level').val();
     var selector = '.inventory[data-variant-id="'+this.editStockId+'"]';
@@ -158,9 +166,9 @@ $(document).bind("mobileinit", function(){
 
   ICE.session.getStock();
   window.location = '#home';
+
     
   $('#home a').live('click tap', function(){
-    $.mobile.pageLoading();
     ICE.session.selectBrand($(this));
   });
 
@@ -172,7 +180,7 @@ $(document).bind("mobileinit", function(){
 
   $('#product-list a').live('click tap', function(){
     ICE.session.editStockId = $(this).attr('data-variant-id');
-    ICE.session.editStock();
+    ICE.session.incrementStock2(1);
   });
   
   // pageshow not working for dialogs
