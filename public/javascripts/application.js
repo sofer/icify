@@ -18,6 +18,7 @@ ICE.session = {
   company: {},
   editStockId: null,
   currentBrandIndex: '0',
+  currentCollectionIndex: '0',
   
   // json request
   getStock: function() {
@@ -50,7 +51,7 @@ ICE.session = {
       var collection = this.company.brands[i];
       var item = $('<li>');
       var link = $('<a>').attr({
-        href: '#products',
+        href: '#collections',
         'data-brand-index': i
       }).text(collection.name);
       item.append(link)
@@ -59,19 +60,17 @@ ICE.session = {
     $('#home div[data-role="content"]').append(list);
     $('#home ul[data-role="listview"]').listview(); //regenerate the listview
   },
-  
-  // not in use
-  loadCollections: function(link) {
-    var kind = link.attr('data-kind');    
+
+  loadCollections: function() {
+    var brand = this.company.brands[this.currentBrandIndex];
     $('#collections div[data-role="content"]').html('');
     var list = $('<ul data-role="listview"/>');
-    for (var i=0;i<this.company[kind].length;i++) {
-      var collection = this.company[kind][i];
+    for (var i=0;i<brand.collections.length;i++) {
+      var collection = brand.collections[i];
       var item = $('<li>');
       var link = $('<a>').attr({
         href: '#products',
-        'data-kind': kind,
-        'data-id': i
+        'data-collection-index': i
       }).text(collection.name);
       item.append(link)
       list.append(item);
@@ -84,36 +83,36 @@ ICE.session = {
     this.currentBrandIndex = link.attr('data-brand-index');
   },
 
-  loadProducts: function(link) {
-    var brand = this.company.brands[this.currentBrandIndex];
-    var previousBrandName = $('#products h1').text();
-    if (brand.name != previousBrandName) {
-      $('#products h1').text(brand.name);
-      $('#product-list').html('');
-      var list = $('<ul data-role="listview" data-filter="true" data-inset="true"/>');
-      for (var i=0;i<brand.products.length;i++) {
-        var product = brand.products[i];
-        var item = $('<li data-role="list-divider">');
-        item.text(product.title);
-        list.append(item);
-        for (var j=0;j<product.variants.length;j++) {
+  selectCollection: function(link) {
+    this.currentCollectionIndex = link.attr('data-collection-index');
+  },
 
-          var variant = this.addVariant(product.variants[j], i, j);
-          list.append(variant);
-        }
+  loadProducts: function(link) {
+    var collection = this.company.brands[this.currentBrandIndex].collections[this.currentCollectionIndex];
+    $('#products h1').text(collection.name);
+    $('#product-list').html('');
+    var list = $('<ul data-role="listview" data-filter="true" data-inset="true"/>');
+    for (var i=0;i<collection.products.length;i++) {
+      var product = collection.products[i];
+      var item = $('<li data-role="list-divider">');
+      item.text(product.title);
+      list.append(item);
+      for (var j=0;j<product.variants.length;j++) {
+        var variant = this.addVariant(product.variants[j], i, j);
+        list.append(variant);
       }
-      $('#product-list').append(list);
-      $('#products ul[data-role="listview"]').listview(); //regenerate the listview
     }
+    $('#product-list').append(list);
+    $('#products ul[data-role="listview"]').listview(); //regenerate the listview
   },
   
   addVariant: function(variant, product_index, variant_index) {
     var item = $('<li>');
     var link = $('<a>').attr({
     //item.attr({
-      //href: '#stock-edit',
-      //'data-rel': 'dialog', 
-      //'data-transition': 'pop',
+      href: '#stock-edit',
+      'data-rel': 'dialog', 
+      'data-transition': 'pop',
       'data-variant-id': variant.id, 
       'data-variant-index': variant_index, 
       'data-product-index': product_index
@@ -172,20 +171,34 @@ $(document).bind("mobileinit", function(){
     ICE.session.selectBrand($(this));
   });
 
+  $('#collections a').live('click tap', function(){
+    ICE.session.selectCollection($(this));
+  });
+
+  $('#collections').live('pageshow', function(event, ui){
+    $.mobile.pageLoading();
+    ICE.session.loadCollections();
+    $.mobile.pageLoading(true);
+  });
+
   $('#products').live('pageshow', function(event, ui){
     $.mobile.pageLoading();
     ICE.session.loadProducts();
     $.mobile.pageLoading(true);
   });
+  
+  $('#products').live('scrollstart', function(){
+    alert('scrolling');
+  })
 
   $('#product-list a').live('click tap', function(){
     ICE.session.editStockId = $(this).attr('data-variant-id');
-    ICE.session.incrementStock2(1);
+    //ICE.session.incrementStock2(1);
   });
   
   // pageshow not working for dialogs
   $('#stock-edit').live('pageshow', function(event, ui){
-    //ICE.session.editStock();
+    ICE.session.editStock();
   });
 
   $('#add-stock').live('click tap', function(){

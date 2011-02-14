@@ -38,12 +38,23 @@ class CompaniesController < ApplicationController
   
   private
   
-  def stock
+  def xstock
     @company.to_json(:include => { :brands => { 
       :only => [:id,:name,:title,:inventory,:sku], 
         :include => {:products => { 
           :include => :variants 
         }}
+    }})
+  end
+
+  def stock
+    @company.to_json(:include => {:brands => {
+      :only => [:id,:name,:title,:inventory,:sku], 
+      :include => {:collections => {
+        :include => { :products => {
+          :include => :variants
+        }}
+      }}
     }})
   end
 
