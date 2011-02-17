@@ -139,14 +139,14 @@ ICE.session = {
   },
 
   editStock: function() {
-    var li = $('#products li a[data-variant-id="'+this.currentVariantIndex+'"]')
-    var title = li.text();
-    var inventory = 
-    $('#stock-title').text(title);
-    $('#stock-current').val(inventory);
+    //var title = li.text();
+    //var inventory = ;
+    var variant = this.company.brands[this.currentBrandIndex].collections[this.currentCollectionIndex].products[this.currentProductIndex].variants[this.currentVariantIndex]
+    $('#stock-title').text(variant.sku);
+    $('#stock-current').val(variant.inventory);
     $('#stock-difference').val('0');
-    $('#new-stock-level').val(inventory);
-    $('edit-stock-id').val(inventory);
+    $('#new-stock-level').val(variant.inventory);
+    //$('edit-stock-id').val(inventory);
   },
   
   incrementStock: function(inc) {
@@ -158,7 +158,7 @@ ICE.session = {
 
   updateStock: function() {
     var inventory = $('#new-stock-level').val();
-this.company.brands[this.currentBrandIndex].collections[this.currentCollectionIndex].products[this.currentProductIndex].variants[this.currentVariantIndex]
+this.company.brands[this.currentBrandIndex].collections[this.currentCollectionIndex].products[this.currentProductIndex].variants[this.currentVariantIndex].inventory = inventory;
   }
   
 }
