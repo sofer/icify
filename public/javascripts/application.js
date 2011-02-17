@@ -16,10 +16,11 @@ var ICE = {}
 ICE.session = {
     
   company: {},
-  editStockId: null,
   currentBrandIndex: '0',
   currentCollectionIndex: '0',
-  
+  currentProductIndex: '0',
+  currentVariantIndex: '0',
+
   // json request
   getStock: function() {
     var that = this;
@@ -63,20 +64,25 @@ ICE.session = {
 
   loadCollections: function() {
     var brand = this.company.brands[this.currentBrandIndex];
-    $('#collections div[data-role="content"]').html('');
-    var list = $('<ul data-role="listview"/>');
-    for (var i=0;i<brand.collections.length;i++) {
-      var collection = brand.collections[i];
-      var item = $('<li>');
-      var link = $('<a>').attr({
-        href: '#products',
-        'data-collection-index': i
-      }).text(collection.name);
-      item.append(link)
-      list.append(item);
+    if (brand.collections.length < 2) {
+      this.currentCollectionIndex = '0';
+      window.location.hash = '#products';
+    } else {
+      $('#collections div[data-role="content"]').html('');
+      var list = $('<ul data-role="listview"/>');
+      for (var i=0;i<brand.collections.length;i++) {
+        var collection = brand.collections[i];
+        var item = $('<li>');
+        var link = $('<a>').attr({
+          href: '#products',
+          'data-collection-index': i
+        }).text(collection.name);
+        item.append(link)
+        list.append(item);
+      }
+      $('#collections div[data-role="content"]').append(list);
+      $('#collections ul[data-role="listview"]').listview(); //regenerate the listview      
     }
-    $('#collections div[data-role="content"]').append(list);
-    $('#collections ul[data-role="listview"]').listview(); //regenerate the listview
   },
   
   selectBrand: function(link) {
@@ -85,6 +91,11 @@ ICE.session = {
 
   selectCollection: function(link) {
     this.currentCollectionIndex = link.attr('data-collection-index');
+  },
+
+  selectProduct: function(link) {
+    this.currentProductIndex = link.attr('data-product-index');
+    this.currentVariantIndex = link.attr('data-variant-index');
   },
 
   loadProducts: function(link) {
@@ -128,35 +139,26 @@ ICE.session = {
   },
 
   editStock: function() {
-    var li = $('#products li a[data-variant-id="'+this.editStockId+'"]')
+    var li = $('#products li a[data-variant-id="'+this.currentVariantIndex+'"]')
     var title = li.text();
-    var inventory = li.parent().children('.inventory').text();
+    var inventory = 
     $('#stock-title').text(title);
     $('#stock-current').val(inventory);
     $('#stock-difference').val('0');
     $('#new-stock-level').val(inventory);
-    self.editStockId = li.attr('data-variant-id');
     $('edit-stock-id').val(inventory);
   },
   
   incrementStock: function(inc) {
     var inventory = parseInt($('#new-stock-level').val())+inc;
-    if (inventory < 0) { inventory = 0; }
-    $('#new-stock-level').val(inventory);
-  },
-
-  incrementStock2: function(inc) {
-    var selector = '.inventory[data-variant-id="'+this.editStockId+'"]';
-    var inventory = parseInt($(selector).text())+inc;
     if (inventory >= 0) { 
-      $(selector).text(inventory); 
+      $('#new-stock-level').val(inventory);
     }
   },
 
   updateStock: function() {
     var inventory = $('#new-stock-level').val();
-    var selector = '.inventory[data-variant-id="'+this.editStockId+'"]';
-    $(selector).text(inventory);
+this.company.brands[this.currentBrandIndex].collections[this.currentCollectionIndex].products[this.currentProductIndex].variants[this.currentVariantIndex]
   }
   
 }
@@ -192,11 +194,10 @@ $(document).bind("mobileinit", function(){
   })
 
   $('#product-list a').live('click tap', function(){
-    ICE.session.editStockId = $(this).attr('data-variant-id');
-    //ICE.session.incrementStock2(1);
+    ICE.session.selectProduct($(this));
   });
   
-  // pageshow not working for dialogs
+  // pageshow not working for dialogs ?
   $('#stock-edit').live('pageshow', function(event, ui){
     ICE.session.editStock();
   });
