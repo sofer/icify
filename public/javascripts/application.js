@@ -189,9 +189,9 @@ $(document).bind("mobileinit", function(){
     $.mobile.pageLoading(true);
   });
   
-  $('#products').live('scrollstart', function(){
-    alert('scrolling');
-  })
+  //$('#products').live('scrollstart', function(){
+  //  alert('scrolling');
+  //})
 
   $('#product-list a').live('click tap', function(){
     ICE.session.selectProduct($(this));
