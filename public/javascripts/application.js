@@ -62,11 +62,18 @@ ICE.session = {
     $('#home ul[data-role="listview"]').listview(); //regenerate the listview
   },
 
-  loadCollections: function() {
+  loadCollections: function(ui) {
     var brand = this.company.brands[this.currentBrandIndex];
-    if (brand.collections.length < 2) {
+    
+    //if (brand.collections.length < 2) {
+    if (false) {
       this.currentCollectionIndex = '0';
-      window.location.hash = '#products';
+      if (ui.prevPage[0].id == 'home') {
+        $.mobile.changePage('#products');
+      } else {
+        $.mobile.changePage('#home', 'slide', true, false);
+      } // history misbehaving here
+    
     } else {
       $('#collections div[data-role="content"]').html('');
       var list = $('<ul data-role="listview"/>');
@@ -141,11 +148,12 @@ ICE.session = {
   editStock: function() {
     //var title = li.text();
     //var inventory = ;
-    var variant = this.company.brands[this.currentBrandIndex].collections[this.currentCollectionIndex].products[this.currentProductIndex].variants[this.currentVariantIndex]
+    var variant = this.company.brands[this.currentBrandIndex].collections[this.currentCollectionIndex].products[this.currentProductIndex].variants[this.currentVariantIndex];
+    var inventory = variant.inventory || 0;
     $('#stock-title').text(variant.sku);
-    $('#stock-current').val(variant.inventory);
+    $('#stock-current').val(inventory);
     $('#stock-difference').val('0');
-    $('#new-stock-level').val(variant.inventory);
+    $('#new-stock-level').val(inventory);
     //$('edit-stock-id').val(inventory);
   },
   
@@ -179,7 +187,7 @@ $(document).bind("mobileinit", function(){
 
   $('#collections').live('pageshow', function(event, ui){
     $.mobile.pageLoading();
-    ICE.session.loadCollections();
+    ICE.session.loadCollections(ui);
     $.mobile.pageLoading(true);
   });
 
