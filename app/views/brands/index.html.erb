@@ -1,11 +1,23 @@
-<div id="collections" data-role="page">
-  <div data-role="header">
-    <h1>Brands</h1>
-  </div>
-  <div data-role="content">
-    <ul data-role="listview">
-      <%= render :partial => "brand", :collection => @brands %>
-    </ul>
-  </div>
-  <%= render :partial => "application/footer" %>
-</div>
+<h1>Listing brands</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @brands.each do |brand| %>
+  <tr>
+    <td><%= brand.name %></td>
+    <td><%= link_to 'Show', brand %></td>
+    <td><%= link_to 'Edit', edit_brand_path(brand) %></td>
+    <td><%= link_to 'Destroy', brand, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Brand', new_brand_path %>

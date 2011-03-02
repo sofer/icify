@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html manifest="/cache.manifest">
+  <title>Icify</title>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
+  <%= stylesheet_link_tag 'application.css' %>
+  <script src="http://code.jquery.com/jquery-1.5.min.js"></script>
+  <%= javascript_include_tag 'stock.js' %>
+  <script src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+  
+  <% if notice %><p id="notice"><%= notice %></p><% end %>
+  <% if alert %><p id="alert"><%= alert %></p><% end %>
+
+  <%= yield %>
+
+</body>
+</html>

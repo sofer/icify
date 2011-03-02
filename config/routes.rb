@@ -1,5 +1,9 @@
 Icify::Application.routes.draw do
 
+  get "stock/show"
+
+  resources :stock
+  
   resources :companies do
     resources :brands
     resources :collections
@@ -22,7 +26,7 @@ Icify::Application.routes.draw do
   #match 'stock' => 'orders#new'
 
   #root :to => redirect("/companies/1")
-  root :to => 'companies#show', :id => 1
+  root :to => 'stock#show', :id => 1
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
