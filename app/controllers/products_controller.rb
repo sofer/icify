@@ -2,7 +2,7 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.xml
   def index
-    @products = group.products
+    @products = Product.all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -80,15 +80,4 @@ class ProductsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
-  private 
-  
-  def group
-    @group ||= case
-             when params[:company_id] then Company.find(params[:company_id])
-             when params[:collection_id] then Collection.find(params[:collection_id])
-             when params[:brand_id] then Brand.find(params[:brand_id])
-             end
-  end
-  
 end

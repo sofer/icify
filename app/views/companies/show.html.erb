@@ -4,7 +4,9 @@
   <b>Name:</b>
   <%= @company.name %>
 </p>
-
+<p>
+  <%= link_to 'Display brands', company_brands_path(@company) %>
+</p>  
 
 <%= link_to 'Edit', edit_company_path(@company) %> |
 <%= link_to 'Back', companies_path %>

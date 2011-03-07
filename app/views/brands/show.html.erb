@@ -5,6 +5,9 @@
   <%= @brand.name %>
 </p>
 
+<% for product in @brand.products %>
+  <%= link_to product.name, edit_product_path(product) %><br>
+<% end %>
 
 <%= link_to 'Edit', edit_brand_path(@brand) %> |
 <%= link_to 'Back', brands_path %>

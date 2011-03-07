@@ -10,6 +10,7 @@ Icify::Application.routes.draw do
     resources :imports
   end
 
+  resources :products
   resources :brands do
     resources :products
   end

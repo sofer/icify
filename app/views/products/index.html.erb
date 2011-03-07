@@ -1,13 +1,33 @@
-<div id="collections" data-role="page">
-  <div data-role="header">
-    <h1><%= @group.name %></h1>
-  </div>
-  <div data-role="content">
-    <ul data-role="listview" data-filter="true" data-inset="true">
-      <%= render :partial => "product", :collection => @group.products %>
-    </ul>
-  </div>
-  <%= render :partial => "application/footer" %>
-</div>
+<h1>Listing products</h1>
 
-<%= render :partial => "edit_variant" %>
+<table>
+  <tr>
+    <th>Handle</th>
+    <th>Title</th>
+    <th>Name</th>
+    <th>Body</th>
+    <th>Code</th>
+    <th>Tags</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @products.each do |product| %>
+  <tr>
+    <td><%= product.handle %></td>
+    <td><%= product.title %></td>
+    <td><%= product.name %></td>
+    <td><%= product.body %></td>
+    <td><%= product.code %></td>
+    <td><%= product.tags %></td>
+    <td><%= link_to 'Show', product %></td>
+    <td><%= link_to 'Edit', edit_product_path(product) %></td>
+    <td><%= link_to 'Destroy', product, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Product', new_product_path %>
